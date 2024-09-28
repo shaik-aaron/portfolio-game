@@ -164,6 +164,7 @@ scene("game", () => {
   // Define a variable to store the "Press E" text
   let pressText = null;
   let black_box = null;
+  let isNearResume = false;
 
   // Add the resume (scroll) sprite
   const resume = add([
@@ -201,25 +202,28 @@ scene("game", () => {
           fixed(), // Make sure text follows the camera
           color(255, 255, 255), // White text color
         ]);
-      }
 
-      // If the player presses "E" and is near the resume
-      onKeyPress("e", () => {
-        if (user.pos.dist(resume.pos) < 200) {
-          // Open the resume link when "E" is pressed
-          window.open(
-            "https://docs.google.com/document/d/1_kEWqLq6rJzve_juZtS8TxKMIkztWjHwwFSMYH2t_ig/edit?usp=sharing ",
-            "_blank"
-          );
-        }
-      });
+        isNearResume = true;
+      }
     } else {
       // Remove the text if the player moves away
       if (pressText) {
         destroy(pressText);
         destroy(black_box);
         pressText = null;
+        black_box = null;
+        isNearResume = false;
       }
+    }
+  });
+
+  onKeyPress("e", () => {
+    if (user.pos.dist(resume.pos) < 200) {
+      // Open the resume link when "E" is pressed
+      window.open(
+        "https://docs.google.com/document/d/1_kEWqLq6rJzve_juZtS8TxKMIkztWjHwwFSMYH2t_ig/edit?usp=sharing ",
+        "_blank"
+      );
     }
   });
 });
