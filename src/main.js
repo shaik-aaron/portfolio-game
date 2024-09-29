@@ -49,21 +49,49 @@ loadSprite("playerJumping", "sprites/Jump.png", {
 
 loadSprite("scroll", "sprites/Scroll.png");
 
+loadSprite("torch", "sprites/torch.png", {
+  sliceX: 5,
+  sliceY: 0,
+  anims: {
+    burning: { from: 0, to: 4, loop: true },
+  },
+});
+
+loadSprite("cat", "sprites/IdleCat.png", {
+  sliceX: 7,
+  sliceY: 0,
+  anims: {
+    catIdle: { from: 0, to: 6, loop: true },
+  },
+});
+
 //Main game scene
 
 scene("game", () => {
   //Setting layers
   layers(["background", "floor"], "floor");
 
-  setGravity(1200);
+  setGravity(1000);
 
   const user = add([
     sprite("playerIdle", {
       anim: "idle", // the animation to play at the start
     }),
-    pos(300, 300),
+    pos(200, 430),
     area(),
     body(),
+  ]);
+
+  const cat = add([
+    sprite("cat", {
+      anim: "catIdle", // the animation to play at the start
+    }),
+    pos(30, 400),
+    area(),
+    body(),
+    scale(1.8),
+    anchor("botleft"),
+    body({ isStatic: true }),
   ]);
 
   let isRunning = false;
@@ -138,6 +166,18 @@ scene("game", () => {
     ]);
   }
 
+  for (let i = 0; i < 7; i++) {
+    add([
+      sprite("floor"),
+      outline(1),
+      pos(171 * i, height() - 250),
+      anchor("botleft"),
+      area({ width: 80, height: 1000 }),
+      body({ isStatic: true }),
+      color(127, 200, 255),
+    ]);
+  }
+
   add([
     sprite("floor"),
     outline(4),
@@ -160,6 +200,17 @@ scene("game", () => {
       ]);
     }
   }
+
+  add([
+    sprite("torch", {
+      anim: "burning", // the animation to play at the start
+    }),
+    outline(4),
+    pos(0, 550),
+    layer("background"),
+    scale(4),
+    fixed(),
+  ]);
 
   // Define a variable to store the "Press E" text
   let pressText = null;
@@ -195,7 +246,7 @@ scene("game", () => {
 
         // Add the "Press E to view resume" text separately over the background
         pressText = add([
-          text("Press E to view resume", {
+          text("An old document with a name. Press E to view it", {
             size: 22, // Text size
           }),
           pos(5, height() - 90), // Position the text within the black rectangle
