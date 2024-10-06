@@ -65,6 +65,11 @@ loadSprite("cat", "sprites/IdleCat.png", {
   },
 });
 
+loadSprite("briefcase", "sprites/briefcase.png", {
+  sliceX: 1,
+  sliceY: 1,
+});
+
 //Main game scene
 
 scene("game", () => {
@@ -86,10 +91,20 @@ scene("game", () => {
     sprite("cat", {
       anim: "catIdle", // the animation to play at the start
     }),
-    pos(30, 400),
+    pos(30, 310),
     area(),
     body(),
     scale(1.8),
+    anchor("botleft"),
+    body({ isStatic: true }),
+  ]);
+
+  const briefcase = add([
+    sprite("briefcase"),
+    pos(width() - 80, 145),
+    area(),
+    body(),
+    scale(0.05),
     anchor("botleft"),
     body({ isStatic: true }),
   ]);
@@ -171,6 +186,30 @@ scene("game", () => {
       sprite("floor"),
       outline(1),
       pos(171 * i, height() - 250),
+      anchor("botleft"),
+      area({ width: 80, height: 1000 }),
+      body({ isStatic: true }),
+      color(127, 200, 255),
+    ]);
+  }
+
+  for (let i = 0; i < 2; i++) {
+    add([
+      sprite("floor"),
+      outline(1),
+      pos(171 * i, height() - 340),
+      anchor("botleft"),
+      area({ width: 80, height: 1000 }),
+      body({ isStatic: true }),
+      color(127, 200, 255),
+    ]);
+  }
+
+  for (let i = 0; i < 7; i++) {
+    add([
+      sprite("floor"),
+      outline(1),
+      pos(500 + 171 * i, height() - 500),
       anchor("botleft"),
       area({ width: 80, height: 1000 }),
       body({ isStatic: true }),
@@ -275,6 +314,107 @@ scene("game", () => {
         "https://docs.google.com/document/d/1_kEWqLq6rJzve_juZtS8TxKMIkztWjHwwFSMYH2t_ig/edit?usp=sharing ",
         "_blank"
       );
+    }
+  });
+
+  let pressTextCat = null;
+  let black_box_cat = null;
+  let isNearCat = false;
+
+  onUpdate(() => {
+    // Check if player is near the cat (within a certain distance)
+    if (user.pos.dist(cat.pos) < 200) {
+      if (!pressTextCat) {
+        // Add the black background rectangle for the text
+        black_box_cat = add([
+          rect(width(), 120), // Rectangle width and height
+          pos(0, height() - 120), // Position below the player
+          outline(4, rgb(255, 255, 255)), // White border
+          color(0, 0, 0), // Black background
+          fixed(), // Fixed to the screen (follows the camera)
+        ]);
+
+        // Add the "meeeeoooWWW! meow meow? (Press E to open Github)" text
+        pressTextCat = add([
+          text("meeeeoooWWW! meow meow? (Press E to open Github)", {
+            size: 22, // Text size
+          }),
+          pos(5, height() - 90), // Position the text within the black rectangle
+          fixed(), // Make sure text follows the camera
+          color(255, 255, 255), // White text color
+        ]);
+
+        isNearCat = true;
+      }
+    } else {
+      // Remove the text if the player moves away
+      if (pressTextCat) {
+        destroy(pressTextCat);
+        destroy(black_box_cat);
+        pressTextCat = null;
+        black_box_cat = null;
+        isNearCat = false;
+      }
+    }
+  });
+
+  // When 'E' is pressed, open GitHub link if near the cat
+  onKeyPress("e", () => {
+    if (user.pos.dist(cat.pos) < 200) {
+      // Open the GitHub link when "E" is pressed
+      window.open("https://github.com/shaik-aaron", "_blank");
+    }
+  });
+
+  let pressTextBriefcase = null;
+  let black_box_briefcase = null;
+  let isNearBriefcase = false;
+
+  onUpdate(() => {
+    // Check if player is near the briefcase (within a certain distance)
+    if (user.pos.dist(briefcase.pos) < 200) {
+      if (!pressTextBriefcase) {
+        // Add the black background rectangle for the text
+        black_box_briefcase = add([
+          rect(width(), 120), // Rectangle width and height
+          pos(0, height() - 120), // Position below the player
+          outline(4, rgb(255, 255, 255)), // White border
+          color(0, 0, 0), // Black background
+          fixed(), // Fixed to the screen (follows the camera)
+        ]);
+
+        // Add the professional message for LinkedIn interaction
+        pressTextBriefcase = add([
+          text(
+            "A polished briefcase. What's inside? (Press E to open LinkedIn)",
+            {
+              size: 22, // Text size
+            }
+          ),
+          pos(5, height() - 90), // Position the text within the black rectangle
+          fixed(), // Make sure text follows the camera
+          color(255, 255, 255), // White text color
+        ]);
+
+        isNearBriefcase = true;
+      }
+    } else {
+      // Remove the text if the player moves away
+      if (pressTextBriefcase) {
+        destroy(pressTextBriefcase);
+        destroy(black_box_briefcase);
+        pressTextBriefcase = null;
+        black_box_briefcase = null;
+        isNearBriefcase = false;
+      }
+    }
+  });
+
+  // When 'E' is pressed, open LinkedIn link if near the briefcase
+  onKeyPress("e", () => {
+    if (user.pos.dist(briefcase.pos) < 200) {
+      // Open the LinkedIn link when "E" is pressed
+      window.open("https://www.linkedin.com/in/shaik-aaron", "_blank");
     }
   });
 });
