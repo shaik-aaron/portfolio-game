@@ -74,7 +74,20 @@ loadSprite("briefcase", "sprites/briefcase.png", {
 
 scene("game", () => {
   //Setting layers
+
+  let second_row_tiles;
+
   layers(["background", "floor"], "floor");
+
+  let WINDOW_WIDTH = width();
+
+  if (WINDOW_WIDTH < 1290) {
+    second_row_tiles = 5;
+  } else if (WINDOW_WIDTH < 1450) {
+    second_row_tiles = 6;
+  } else {
+    second_row_tiles = 7;
+  }
 
   setGravity(1000);
 
@@ -91,7 +104,7 @@ scene("game", () => {
     sprite("cat", {
       anim: "catIdle", // the animation to play at the start
     }),
-    pos(30, 310),
+    pos(30, height() - 430),
     area(),
     body(),
     scale(1.8),
@@ -101,7 +114,7 @@ scene("game", () => {
 
   const briefcase = add([
     sprite("briefcase"),
-    pos(width() - 80, 145),
+    pos(width() - 80, height() - 590),
     area(),
     body(),
     scale(0.05),
@@ -181,7 +194,7 @@ scene("game", () => {
     ]);
   }
 
-  for (let i = 0; i < 7; i++) {
+  for (let i = 0; i < second_row_tiles; i++) {
     add([
       sprite("floor"),
       outline(1),
@@ -220,7 +233,7 @@ scene("game", () => {
   add([
     sprite("floor"),
     outline(4),
-    pos(width() - 160, 650),
+    pos(width() - 160, height() - 90),
     anchor("botleft"),
     area(),
     body({ isStatic: true }),
@@ -245,7 +258,7 @@ scene("game", () => {
       anim: "burning", // the animation to play at the start
     }),
     outline(4),
-    pos(0, 550),
+    pos(0, height() - 200),
     layer("background"),
     scale(4),
     fixed(),
@@ -260,7 +273,7 @@ scene("game", () => {
   const resume = add([
     sprite("scroll"),
     outline(8),
-    pos(width() - 50, 550),
+    pos(width() - 50, height() - 180),
     anchor("botleft"),
     scale(2),
     body({ isStatic: true }),
