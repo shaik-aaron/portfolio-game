@@ -218,7 +218,7 @@ scene("game", () => {
     ]);
   }
 
-  for (let i = 0; i < 7; i++) {
+  for (let i = 0; i < 9; i++) {
     add([
       sprite("floor"),
       outline(1),
